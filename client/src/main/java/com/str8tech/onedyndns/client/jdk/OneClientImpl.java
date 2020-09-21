@@ -15,7 +15,9 @@ package com.str8tech.onedyndns.client.jdk;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.str8tech.onedyndns.client.IllegalDomainException;
 import com.str8tech.onedyndns.client.OneClient;
+import com.str8tech.onedyndns.client.RecordAlreadyExistsException;
 import com.str8tech.onedyndns.client.dns.AddDnsRecordRequest;
 import com.str8tech.onedyndns.client.dns.AddDnsRecordResponse;
 import com.str8tech.onedyndns.client.dns.DeleteDnsRecordResponse;
@@ -47,7 +49,7 @@ public class OneClientImpl implements OneClient {
   }
 
   @Override
-  public DeleteDnsRecordResponse deleteDnsRecord(String domain, String id) throws IOException {
+  public DeleteDnsRecordResponse deleteDnsRecord(String domain, String id) throws IllegalDomainException, IOException {
     HttpRequest request
             = HttpRequest
                     .newBuilder()
@@ -57,7 +59,9 @@ public class OneClientImpl implements OneClient {
     HttpResponse<InputStream> response;
     try {
       response = session.getHttpClient().send(request, HttpResponse.BodyHandlers.ofInputStream());
-      if (response.statusCode() != 200) {
+      if (response.statusCode() == 403) {
+        throw new IllegalDomainException(String.format("Domain '%s' is illegal or not managed by this session", domain));
+      } else if (response.statusCode() != 200) {
         throw new IOException(String.format("Non-success response to delete of DNS record '%s' for domain '%s': %d", id, domain, response.statusCode()));
       }
     } catch (InterruptedException ex) {
@@ -67,7 +71,8 @@ public class OneClientImpl implements OneClient {
   }
 
   @Override
-  public AddDnsRecordResponse addDnsRecord(String domain, int priority, int ttl, DnsRecords.RecordType type, String prefix, String content) throws IOException {
+  public AddDnsRecordResponse addDnsRecord(String domain, int priority, int ttl, DnsRecords.RecordType type, String prefix,
+          String content) throws IOException, RecordAlreadyExistsException, IllegalDomainException {
     AddDnsRecordRequest addDnsRecordRequest = new AddDnsRecordRequest();
     addDnsRecordRequest.setType("dns_custom_records");
     addDnsRecordRequest.setAttributes(new AddDnsRecordRequest.Attributes());
@@ -92,22 +97,27 @@ public class OneClientImpl implements OneClient {
                     .POST(HttpRequest.BodyPublishers.ofString(json))
                     .build();
     HttpResponse<InputStream> response;
+    String responseJson;
     try {
       response = session.getHttpClient().send(request, HttpResponse.BodyHandlers.ofInputStream());
-      if (response.statusCode() != 200) {
+      responseJson = new String(response.body().readAllBytes(), UTF_8);
+      LOG.trace("addDnsRecordResponse={}", responseJson);
+      if (response.statusCode() == 403) {
+        throw new IllegalDomainException(String.format("Domain '%s' is illegal or not managed by this session", domain));
+      } else if (response.statusCode() == 409) {
+        throw new RecordAlreadyExistsException(String.format("The record '%s' in domain '%s' already exists", prefix, domain));
+      } else if (response.statusCode() != 200) {
         throw new IOException(String.format("Non-success response to adding DNS record '%s' to domain '%s': %d", prefix, domain, response.statusCode()));
       }
     } catch (InterruptedException ex) {
       throw new IOException(String.format("Request to add DNS record '%s' to domain '%s' was interrupted", prefix, domain), ex);
     }
-    String responseJson = new String(response.body().readAllBytes(), UTF_8);
-    LOG.trace("addDnsRecordResponse={}", responseJson);
     AddDnsRecordResponse ret = AddDnsRecordResponse.parse(new ByteArrayInputStream(responseJson.getBytes(UTF_8)));
     return ret;
   }
 
   @Override
-  public DnsRecords getDnsRecords(String domain) throws IOException {
+  public DnsRecords getDnsRecords(String domain) throws IOException, IllegalDomainException {
     // Set the accept header to app/jsn?
     HttpRequest request
             = HttpRequest
@@ -118,7 +128,9 @@ public class OneClientImpl implements OneClient {
     HttpResponse<InputStream> response;
     try {
       response = session.getHttpClient().send(request, HttpResponse.BodyHandlers.ofInputStream());
-      if (response.statusCode() != 200) {
+      if (response.statusCode() == 403) {
+        throw new IllegalDomainException(String.format("Domain '%s' is illegal or not managed by this session", domain));
+      } else if (response.statusCode() != 200) {
         throw new IOException(String.format("Non-success response to listing of DNS records for domain '%s': %d", domain, response.statusCode()));
       }
     } catch (InterruptedException ex) {
@@ -130,7 +142,9 @@ public class OneClientImpl implements OneClient {
   }
 
   @Override
-  public UpdateDnsRecordResponse updateDnsRecord(String domain, String id, int ttl, RecordType type, String prefix, String content) throws IOException {
+  public UpdateDnsRecordResponse updateDnsRecord(String domain, String id,
+          int ttl, RecordType type,
+          String prefix, String content) throws IOException, IllegalDomainException {
     LOG.trace("Update DNS record '{}' for domain '{}'", id, domain);
     UpdateDnsRecordRequest updateDnsRecordRequest = new UpdateDnsRecordRequest();
     updateDnsRecordRequest.setType("dns_service_records");
@@ -155,16 +169,19 @@ public class OneClientImpl implements OneClient {
                     .method("PATCH", HttpRequest.BodyPublishers.ofString(json))
                     .build();
     HttpResponse<InputStream> response;
+    String responseJson;
     try {
       response = session.getHttpClient().send(request, HttpResponse.BodyHandlers.ofInputStream());
-      if (response.statusCode() != 200) {
+      responseJson = new String(response.body().readAllBytes(), UTF_8);
+      LOG.trace("updateDnsRecordResponse={}", responseJson);
+      if (response.statusCode() == 403) {
+        throw new IllegalDomainException(String.format("Domain '%s' is illegal or not managed by this session", domain));
+      } else if (response.statusCode() != 200) {
         throw new IOException(String.format("Non-success response to update of DNS record '%s' for domain '%s': %d", id, domain, response.statusCode()));
       }
     } catch (InterruptedException ex) {
       throw new IOException(String.format("Request for update of DNS record '%s' was interrupted", id), ex);
     }
-    String responseJson = new String(response.body().readAllBytes(), UTF_8);
-    LOG.trace("updateDnsRecordResponse={}", responseJson);
     UpdateDnsRecordResponse ret = UpdateDnsRecordResponse.parse(new ByteArrayInputStream(responseJson.getBytes(UTF_8)));
     return ret;
 

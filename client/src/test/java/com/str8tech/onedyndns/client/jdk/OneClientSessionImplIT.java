@@ -16,7 +16,7 @@ package com.str8tech.onedyndns.client.jdk;
 import com.str8tech.onedyndns.client.OneClient;
 import com.str8tech.onedyndns.client.dns.AddDnsRecordResponse;
 import com.str8tech.onedyndns.client.dns.DnsRecords;
-import com.str8tech.onedyndns.client.dns.UpdateDnsRecordResponse;
+import java.io.IOException;
 import java.util.UUID;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -59,18 +59,27 @@ public class OneClientSessionImplIT {
     final String domain = System.getProperty("it.one.domain");
     final String userName = System.getProperty("it.one.userName");
     final String password = System.getProperty("it.one.password");
+    String testDomain = String.format("one-client-%s", UUID.randomUUID().toString());
     try ( OneClient client = oneClientSessionApacheImpl.login(userName, password)) {
       DnsRecords dnsRecords = client.getDnsRecords(domain);
       assertNotNull(dnsRecords);
-      String testDomain = String.format("one-client-%s", UUID.randomUUID().toString());
       // TODO: What if record name already exists?
       // TODO: What is the IP address (or other values) are incorrect?
       AddDnsRecordResponse addDnsRecord = client.addDnsRecord(domain, 0, 3600, DnsRecords.RecordType.A, testDomain, "1.2.3.4");
-      // TODO: What is record doesn't exist?
-      // TODO: What is the IP address (or other values) are incorrect?
-      UpdateDnsRecordResponse updateDnsRecord = client.updateDnsRecord(domain, addDnsRecord.getResult().getData().getId(), 3600, DnsRecords.RecordType.A, testDomain, "5.6.7.8");
-      // TODO: What is record doesn't exist?
-      client.deleteDnsRecord(domain, updateDnsRecord.getResult().getData().getId());
+      try {
+        //client.addDnsRecord(domain, 0, 3600, DnsRecords.RecordType.A, testDomain, "1.2.3.4");
+        // TODO: What is record doesn't exist?
+        // TODO: What is the IP address (or other values) are incorrect?
+        client.updateDnsRecord(domain, addDnsRecord.getResult().getData().getId(), 3600, DnsRecords.RecordType.A, testDomain, "5.6.7.8");
+        // TODO: What is record doesn't exist?
+      } finally {
+        try {
+          client.deleteDnsRecord(domain, addDnsRecord.getResult().getData().getId());
+        } catch (IOException ex) {
+          System.err.printf("***** DNS RECORD '%s' CREATED BUT NOT REMOVED DURING INTEGRATION TEST, MUST BE REMOVED MANUALLY! *****%n", testDomain);
+          ex.printStackTrace(System.err);
+        }
+      }
     }
   }
 

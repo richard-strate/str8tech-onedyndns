@@ -51,21 +51,50 @@ public interface OneClient extends Closeable {
    * @param prefix Domain record prefix
    * @param content Address of the record (eg IP address)
    * @return
+   * @throws com.str8tech.onedyndns.client.IllegalDomainException
    * @throws java.io.IOException
+   * @throws com.str8tech.onedyndns.client.RecordAlreadyExistsException
    */
-  AddDnsRecordResponse addDnsRecord(String domain, int priority, int ttl, RecordType type, String prefix, String content) throws IOException;
+  AddDnsRecordResponse addDnsRecord(String domain, int priority, int ttl, RecordType type, String prefix, String content) throws IllegalDomainException, IOException, RecordAlreadyExistsException;
 
   /**
    * Get all 'custom DNS records'
    *
-   * @param domain
+   * @param domain Domain to list records for
    * @return
+   * @throws IllegalDomainException Thrown if domain is illegal/not accessible
+   * via the current session
    * @throws java.io.IOException
    */
-  DnsRecords getDnsRecords(String domain) throws IOException;
+  DnsRecords getDnsRecords(String domain) throws IllegalDomainException, IOException;
 
-  DeleteDnsRecordResponse deleteDnsRecord(String domain, String id) throws IOException;
+  /**
+   * Delete a DNS record by domain and id, the id is available in any Create,
+   * Update or List response.
+   *
+   *
+   * @param domain Domain under which the record is stored
+   * @param id Record id as received when creating/update/listing records.
+   * @return
+   * @throws IllegalDomainException Thrown if domain is illegal/not accessible
+   * via the current session
+   * @throws IOException
+   */
+  DeleteDnsRecordResponse deleteDnsRecord(String domain, String id) throws IllegalDomainException, IOException;
 
-  UpdateDnsRecordResponse updateDnsRecord(String domain, String id, int ttl, RecordType type, String prefix, String content) throws IOException;
+  /**
+   * Update an existing DNS record.
+   *
+   * @param domain
+   * @param id Record id as received when creating/update/listing records.
+   * @param ttl
+   * @param type
+   * @param prefix
+   * @param content
+   * @return
+   * @throws IllegalDomainException
+   * @throws IOException
+   */
+  UpdateDnsRecordResponse updateDnsRecord(String domain, String id, int ttl, RecordType type, String prefix, String content) throws IllegalDomainException, IOException;
 
 }
