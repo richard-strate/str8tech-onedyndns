@@ -1,0 +1,16 @@
+{
+  "result": {
+    "data": {
+      "type": "dns_custom_records",
+      "id": "16596278",
+      "attributes": {
+        "prefix": "one-client-d779eebe-ce31-4404-9927-728ce54b7325",
+        "type": "A",
+        "content": "1.2.3.4",
+        "priority": 0,
+        "ttl": 3600
+      }
+    }
+  },
+  "metadata": null
+}

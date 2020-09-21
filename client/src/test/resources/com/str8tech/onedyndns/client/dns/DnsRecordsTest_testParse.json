@@ -1,0 +1,36 @@
+{
+  "result": {
+    "data": [{
+        "type": "dns_custom_records",
+        "id": "1",
+        "attributes": {
+          "prefix": "",
+          "type": "TXT",
+          "content": "v=spf1 include:_custspf.one.com -all",
+          "priority": 0,
+          "ttl": 3600
+        }
+      }, {
+        "type": "dns_custom_records",
+        "id": "2",
+        "attributes": {
+          "prefix": "*.domain.com",
+          "type": "A",
+          "content": "1.2.3.4",
+          "priority": 0,
+          "ttl": 3300
+        }
+      }, {
+        "type": "dns_custom_records",
+        "id": "3",
+        "attributes": {
+          "prefix": "other.domain.com",
+          "type": "A",
+          "content": "1.2.3.4",
+          "priority": 0,
+          "ttl": 3600
+        }
+      }]
+  },
+  "metadata": null
+}

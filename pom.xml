@@ -19,7 +19,8 @@
     <developerConnection>scm:git:git@github.com:richard-strate/str8tech-onedyndns.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
-    <modules>
-        <module>app</module>
-    </modules>
+  <modules>
+    <module>client</module>
+    <module>app</module>
+  </modules>
 </project>

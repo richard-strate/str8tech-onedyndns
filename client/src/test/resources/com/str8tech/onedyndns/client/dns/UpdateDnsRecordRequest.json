@@ -1,0 +1,10 @@
+{
+  "type": "dns_service_records",
+  "id": "16596892",
+  "attributes": {
+    "type": "A",
+    "prefix": "test2",
+    "content": "1.2.3.5",
+    "ttl": 3600
+  }
+}
