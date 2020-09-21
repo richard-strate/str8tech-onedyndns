@@ -48,6 +48,15 @@ public class DnsRecords {
     this.result = result;
   }
 
+  public Data findDataByPrefix(String prefix) {
+    for (Data data : result.dataList) {
+      if (data.getAttributes().getPrefix().equals(prefix)) {
+        return data;
+      }
+    }
+    return null;
+  }
+
   public static class Result {
 
     @JsonProperty("data")

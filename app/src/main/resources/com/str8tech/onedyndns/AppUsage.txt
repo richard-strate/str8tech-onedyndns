@@ -1,0 +1,18 @@
+Usage:
+
+  App <operation> <params>
+
+Where:
+
+  <operation> is the different operation of choice, see below
+  <params> are the set of configuration keys for the operation
+
+Configs:
+
+  Use <operation> 'sample-config' to output a sample configuration file
+
+Opeartions:
+
+  sample-config     Print a sample configuration file
+  download %1       Download and print all entries with the given content (eg IP address)
+  update            Execute a 'dyndns' update of all domain records in config
