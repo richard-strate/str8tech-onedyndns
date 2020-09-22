@@ -15,7 +15,7 @@ Module|Description
 <dependency>
   <groupId>com.str8tech.onedyndns</groupId>
   <artifactId>str8tech-onedyndns</artifactId>
-  <version>2</version>
+  <version>4</version>
 </dependency>
 ````
 
