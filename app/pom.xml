@@ -8,7 +8,7 @@
   </parent>
   <artifactId>onedyndns-app</artifactId>
   <packaging>jar</packaging>
-  <name>str8tech-onedyndns-app</name>
+  <name>Str8tech :: OneDynDns :: Apps</name>
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -25,4 +25,33 @@
       <scope>compile</scope>
     </dependency>
   </dependencies>
+  
+  <build>
+    <plugins>
+      <!-- Build capsule (thin) jar -->
+      <plugin>
+        <groupId>com.github.chrisdchristo</groupId>
+        <artifactId>capsule-maven-plugin</artifactId>
+        <version>1.5.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>build</goal>
+            </goals>
+            <configuration>
+              <appClass>com.str8tech.onedyndns.App</appClass>
+              <type>fat</type>
+              <setManifestRepos>true</setManifestRepos>
+              <manifest>
+                <entry>
+                  <key>Allow-Snapshots</key>
+                  <value>true</value>
+                </entry>
+              </manifest>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

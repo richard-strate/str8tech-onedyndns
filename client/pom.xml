@@ -8,7 +8,7 @@
   </parent>
   <artifactId>onedyndns-client</artifactId>
   <packaging>jar</packaging>
-  <name>str8tech-onedyndns-client</name>
+  <name>Str8tech :: OneDynDns :: Client</name>
   <dependencies>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>

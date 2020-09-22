@@ -49,4 +49,5 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
+    <name>Str8tech :: OneDynDns</name>
 </project>
