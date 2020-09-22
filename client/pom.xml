@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.str8tech.onedyndns</groupId>
     <artifactId>str8tech-onedyndns</artifactId>
-    <version>1</version>
+    <version>2-SNAPSHOT</version>
   </parent>
   <artifactId>onedyndns-client</artifactId>
   <packaging>jar</packaging>
