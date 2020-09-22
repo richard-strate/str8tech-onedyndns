@@ -8,7 +8,7 @@ REST API client for the [one.com](https://www.one.com) DNS managment. Also comes
 <dependency>
   <groupId>com.str8tech.onedyndns</groupId>
   <artifactId>str8tech-onedyndns</artifactId>
-  <version>1-SNAPSHOT</version>
+  <version>2</version>
 </dependency>
 ````
 
