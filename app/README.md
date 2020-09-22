@@ -14,7 +14,7 @@ Path|Scope|Usage|
 `/domains[]`|Optional|List of domains managed by the account
 `/domains[]/name`|Required|Name of the domain, eg `google.se`
 `/domains[]/records[]`|Optional|DNS records inside the domain, eg `www`, `ftp`
-`/domains[]/records[]/type`|Required|Type
+`/domains[]/records[]/type`|Required|Record type, eg `A`, `TXT`, see [enum](https://github.com/richard-strate/str8tech-onedyndns/blob/master/client/src/main/java/com/str8tech/onedyndns/client/dns/DnsRecords.java)
 `/domains[]/records[]/prefix`|Required|Record priority
 `/domains[]/records[]/priority`|Optional, defaults to `0`|Record priority
 `/domains[]/records[]/ttl`|Optional, defaults to `3600`|Time-to-live
