@@ -42,7 +42,8 @@ public interface OneClient extends Closeable {
 
   /**
    * Add a new DNS record.If the record already exists, use
-   * {@link #removeRecord} to avoid an exception.
+   * {@link #deleteDnsRecord(String domain, String id) deleteDnsRecord} to avoid
+   * an exception.
    *
    * @param domain Domain to add record to (eg 'google.se')
    * @param priority DNS priority, may be NULL and must then default to 0
@@ -50,10 +51,10 @@ public interface OneClient extends Closeable {
    * @param type Type of record
    * @param prefix Domain record prefix
    * @param content Address of the record (eg IP address)
-   * @return
-   * @throws com.str8tech.onedyndns.client.IllegalDomainException
-   * @throws java.io.IOException
-   * @throws com.str8tech.onedyndns.client.RecordAlreadyExistsException
+   * @return Returns the added record including the generated ID
+   * @throws IllegalDomainException
+   * @throws IOException
+   * @throws RecordAlreadyExistsException
    */
   AddDnsRecordResponse addDnsRecord(String domain, int priority, int ttl, RecordType type, String prefix, String content) throws IllegalDomainException, IOException, RecordAlreadyExistsException;
 
@@ -64,7 +65,7 @@ public interface OneClient extends Closeable {
    * @return
    * @throws IllegalDomainException Thrown if domain is illegal/not accessible
    * via the current session
-   * @throws java.io.IOException
+   * @throws IOException
    */
   DnsRecords getDnsRecords(String domain) throws IllegalDomainException, IOException;
 

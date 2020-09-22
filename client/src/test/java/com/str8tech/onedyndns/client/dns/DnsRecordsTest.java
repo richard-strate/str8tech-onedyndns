@@ -47,11 +47,6 @@ public class DnsRecordsTest {
   public void tearDown() {
   }
 
-  /**
-   * Test of parse method, of class DnsRecords.
-   *
-   * @throws java.lang.Exception
-   */
   @Test
   public void testParse() throws Exception {
     DnsRecords actual = DnsRecords.parse(getClass().getResourceAsStream(getClass().getSimpleName() + "_testParse.json"));

@@ -50,9 +50,6 @@ public class OneClientSessionImplIT {
   public void tearDown() {
   }
 
-  /**
-   * Test of login method, of class OneClientSessionApacheImpl.
-   */
   @Test
   public void testLogin() throws Exception {
     OneClientSessionImpl oneClientSessionApacheImpl = new OneClientSessionImpl();
